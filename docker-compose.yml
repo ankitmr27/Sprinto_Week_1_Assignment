@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  express_app:
+    build: .
+    container_name: express_server
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+      - postgres
+    environment:
+      - NODE_ENV=development
+      - MONGO_URI=mongodb://admin:password@mongo:27017/mydatabase?authSource=admin
+      - POSTGRES_URI=postgres://admin:password@postgres:5432/mydatabase
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+  mongo:
+    image: mongo:latest
+    container_name: mongodb_container
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - mongo_data:/data/db
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres_container
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydatabase
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  mongo_data:
+  postgres_data:
