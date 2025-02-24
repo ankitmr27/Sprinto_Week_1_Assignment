@@ -1,6 +1,8 @@
 import express from "express";
 import { sequelize, connectMongo } from "./src/database/db.js";
 import { server } from "./src/graphql/index.js";
+import "./src/models/index.js";
+import logger from "./src/utils/Logger.util.js";
 // configure dotenv
 import * as config from "dotenv";
 config.config();
@@ -24,9 +26,9 @@ app.listen(process.env.PORT, async () => {
   try {
     await sequelize.authenticate();
     await connectMongo();
-    console.log("PostgreSQL and Mongodb connected");
+    logger.info("✅ PostgreSQL and Mongodb connected");
   } catch (error) {
-    console.error("Unable to connect to darabase:", error);
+    logger.error("Unable to connect to darabase:", error);
   }
   console.log(
     `Server running on http://localhost:${process.env.PORT}${server.graphqlPath}`

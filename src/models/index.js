@@ -1,8 +1,12 @@
-import { Book } from "./bookModel";
-import { Author } from "./authorModel";
+import { Book } from "./bookModel.js";
+import { Author } from "./authorModel.js";
 import { sequelize } from "../database/db.js";
+import logger from "../utils/Logger.util.js";
 
-Author.hasMany(Book, { foreignKey: "authorId" });
+// Define relationships
+Author.hasMany(Book, { foreignKey: "authorId", onDelete: "CASCADE" });
 Book.belongsTo(Author, { foreignKey: "authorId" });
 
-sequelize.sync();
+await sequelize.sync({ alter: true }); // Ensure DB structure updates
+
+logger.info("✅ Database models synced");

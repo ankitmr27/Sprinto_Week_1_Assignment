@@ -7,7 +7,7 @@ dotenv.config();
 // PostgreSQL Connection
 export const sequelize = new Sequelize(process.env.POSTGRES_URI, {
   dialect: "postgres",
-  logging: false,
+  logging: true,
 });
 
 // MongoDB Connection
@@ -22,3 +22,5 @@ export const connectMongo = async () => {
     console.error("❌ MongoDB connection error:", err);
   }
 };
+
+await sequelize.sync({ alter: true }); // Syncs the model with the database
